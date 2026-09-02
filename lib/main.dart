@@ -3660,7 +3660,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     );
   }
 }
-
 // ==================== صفحه اختصاصی بارنامه‌ها ====================
 
 class ManifestScreen extends StatefulWidget {
@@ -6207,3 +6206,4 @@ class SalesInvoice {
         createdAt: json['createdAt'] ?? '',
       );
 }
+
