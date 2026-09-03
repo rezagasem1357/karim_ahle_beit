@@ -15,7 +15,20 @@ import 'package:share_plus/share_plus.dart';
 // ==================== ابزارهای تاریخ و خوش‌آمدگویی ====================
 
 List<int> _gregorianToJalali(int gy, int gm, int gd) {
-  const gDaysInMonth = <int>[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+  const gDaysInMonth = <int>[
+    0,
+    31,
+    59,
+    90,
+    120,
+    151,
+    181,
+    212,
+    243,
+    273,
+    304,
+    334
+  ];
 
   int jy;
   int gy2;
@@ -35,8 +48,7 @@ List<int> _gregorianToJalali(int gy, int gm, int gd) {
       gd +
       gDaysInMonth[gm - 1];
 
-  final isLeapGregorian =
-      (gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0);
+  final isLeapGregorian = (gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0);
   if (gm > 2 && isLeapGregorian) days++;
 
   jy += 33 * (days ~/ 12053);
@@ -115,9 +127,9 @@ String _greetingByHour(int hour) {
 
 String _formatPrice(int price) {
   return price.toString().replaceAllMapped(
-    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-    (match) => '${match[1]},',
-  );
+        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+        (match) => '${match[1]},',
+      );
 }
 
 String _displayPrice(int price) {
@@ -244,7 +256,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkUserStatus() async {
     await Future.delayed(const Duration(seconds: 2));
-    
+
     final prefs = await SharedPreferences.getInstance();
     final profileCompleted = prefs.getBool('profile_completed') ?? false;
     final userName = prefs.getString('user_name') ?? '';
@@ -352,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final prefs = await SharedPreferences.getInstance();
     final savedName = prefs.getString('user_name') ?? '';
     final savedLicense = prefs.getString('user_license') ?? '';
-    
+
     if (mounted) {
       setState(() {
         _nameController.text = savedName;
@@ -419,7 +431,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                       image: const DecorationImage(
-                        image: AssetImage('assets/images/Logopit_1787568628075.png'),
+                        image: AssetImage(
+                            'assets/images/Logopit_1787568628075.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -442,13 +455,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'نام و نام خانوادگی',
                       hintText: 'مثلاً رضا قاسمی',
-                      prefixIcon: const Icon(Icons.person_outline, color: Colors.green),
+                      prefixIcon:
+                          const Icon(Icons.person_outline, color: Colors.green),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -466,13 +479,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-
                   TextFormField(
                     controller: _licenseController,
                     decoration: InputDecoration(
                       labelText: 'لایسنس (اختیاری)',
                       hintText: 'کد لایسنس را وارد کنید',
-                      prefixIcon: const Icon(Icons.vpn_key_outlined, color: Colors.green),
+                      prefixIcon: const Icon(Icons.vpn_key_outlined,
+                          color: Colors.green),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -481,7 +494,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-
                   SizedBox(
                     width: double.infinity,
                     height: 56,
@@ -521,7 +533,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -580,13 +591,15 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _purchasePriceController = TextEditingController();
+  final TextEditingController _purchasePriceController =
+      TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _packageSizeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // ==================== FocusNode برای مدیریت کیبورد ====================
   final FocusNode _searchFocusNode = FocusNode();
 
   bool _isSearching = false;
@@ -620,6 +633,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     super.dispose();
   }
 
+  // ==================== تابع بستن کیبورد ====================
   void _closeKeyboard() {
     FocusScope.of(context).unfocus();
   }
@@ -643,12 +657,16 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   int _getNextManifestNumber() {
     if (_savedManifests.isEmpty) return 1;
-    return _savedManifests.map((e) => e.number).reduce((a, b) => a > b ? a : b) + 1;
+    return _savedManifests
+            .map((e) => e.number)
+            .reduce((a, b) => a > b ? a : b) +
+        1;
   }
 
   int _getNextInvoiceNumber() {
     if (_salesInvoices.isEmpty) return 1;
-    return _salesInvoices.map((e) => e.number).reduce((a, b) => a > b ? a : b) + 1;
+    return _salesInvoices.map((e) => e.number).reduce((a, b) => a > b ? a : b) +
+        1;
   }
 
   Future<void> _scanBarcode({bool forSearchOnly = false}) async {
@@ -695,7 +713,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   void _showBarcodeSearchResultDialog(String barcode) {
     _closeKeyboard();
-    final matches = _productDatabase.where((p) => p.barcode == barcode).toList();
+    final matches =
+        _productDatabase.where((p) => p.barcode == barcode).toList();
 
     showDialog(
       context: context,
@@ -870,7 +889,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('📅 تاریخ:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('📅 تاریخ:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(manifest.date),
                       ],
@@ -878,7 +898,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('📋 تعداد کالاها:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('📋 تعداد کالاها:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text('${manifest.items.length}'),
                       ],
@@ -886,11 +907,13 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('💰 مجموع قیمت:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('💰 مجموع قیمت:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(
                           _displayPrice(manifest.totalPrice),
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.green),
                         ),
                       ],
                     ),
@@ -904,30 +927,30 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               ),
               const SizedBox(height: 8),
               ...manifest.items.map((item) => Container(
-                padding: const EdgeInsets.all(8),
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.name,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(width: 8),
-                    Text('${item.quantity} ${item.unit}'),
-                    const SizedBox(width: 8),
-                    Text(
-                      _displayPrice(item.purchasePrice),
-                      style: const TextStyle(color: Colors.green),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.name,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text('${item.quantity} ${item.unit}'),
+                        const SizedBox(width: 8),
+                        Text(
+                          _displayPrice(item.purchasePrice),
+                          style: const TextStyle(color: Colors.green),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )),
+                  )),
             ],
           ),
         ),
@@ -952,206 +975,190 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     );
   }
 
-  // ==================== اشتراک‌گذاری بارنامه با PDF (اصلاح‌شده) ====================
+  // ==================== اشتراک‌گذاری بارنامه با PDF ====================
 
   Future<void> _shareManifestReport(DeliveryManifest manifest) async {
     try {
       _closeKeyboard();
       final font = await _loadFont();
       final pdf = pw.Document();
-      
+
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(30),
           build: (pw.Context context) {
-            return pw.Direction(
-              textDirection: pw.TextDirection.rtl,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Center(
-                    child: pw.Text(
-                      '📦 بارنامه شماره ${manifest.number}',
-                      style: pw.TextStyle(
-                        fontSize: 26,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.blue900,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                  pw.SizedBox(height: 20),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(15),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(color: PdfColors.blue200, width: 1.5),
-                      borderRadius: pw.BorderRadius.circular(8),
-                      color: PdfColors.blue50,
-                    ),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Row(
-                          children: [
-                            pw.Text('📅 تاریخ:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text(manifest.date, 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('📋 تعداد کالاها:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${manifest.items.length}', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.Row(
-                          children: [
-                            pw.Text('💰 مجموع قیمت:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(manifest.totalPrice)} ریال', 
-                              style: pw.TextStyle(
-                                color: PdfColors.green700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  pw.SizedBox(height: 25),
-                  pw.Text(
-                    '🛒 لیست کالاها:',
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    '📦 بارنامه شماره ${manifest.number}',
                     style: pw.TextStyle(
-                      fontSize: 18,
+                      fontSize: 28,
                       fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.blue,
                       font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Table(
-                    border: pw.TableBorder.all(color: PdfColors.grey400),
-                    tableWidth: pw.TableWidth.max,
+                ),
+                pw.SizedBox(height: 20),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.TableRow(
-                        decoration: pw.BoxDecoration(
-                          color: PdfColors.blue100,
+                      pw.Row(
+                        children: [
+                          pw.Text('📅 تاریخ:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text(manifest.date,
+                              style: pw.TextStyle(font: font)),
+                        ],
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('📋 تعداد کالاها:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${manifest.items.length}',
+                              style: pw.TextStyle(font: font)),
+                        ],
+                      ),
+                      pw.Row(
+                        children: [
+                          pw.Text('💰 مجموع قیمت:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_formatPrice(manifest.totalPrice)} ریال',
+                              style: pw.TextStyle(
+                                  color: PdfColors.green,
+                                  fontWeight: pw.FontWeight.bold,
+                                  font: font)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  '🛒 لیست کالاها:',
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                    font: font,
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Table(
+                  border: pw.TableBorder.all(),
+                  tableWidth: pw.TableWidth.max,
+                  children: [
+                    pw.TableRow(
+                      decoration: pw.BoxDecoration(
+                        color: PdfColors.blue100,
+                      ),
+                      children: [
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('ردیف',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
                         ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('نام کالا',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('تعداد',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('قیمت',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                      ],
+                    ),
+                    ...manifest.items.asMap().entries.map((entry) {
+                      final index = entry.key + 1;
+                      final item = entry.value;
+                      return pw.TableRow(
                         children: [
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(10),
-                            child: pw.Text('ردیف', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
+                            child: pw.Text('$index',
+                                style: pw.TextStyle(font: font)),
                           ),
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(10),
-                            child: pw.Text('نام کالا', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
+                            child: pw.Text(item.name,
+                                style: pw.TextStyle(font: font)),
                           ),
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(10),
-                            child: pw.Text('تعداد', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
+                            child: pw.Text('${item.quantity} ${item.unit}',
+                                style: pw.TextStyle(font: font)),
                           ),
                           pw.Padding(
                             padding: const pw.EdgeInsets.all(10),
-                            child: pw.Text('قیمت', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
+                            child: pw.Text(
+                                '${_formatPrice(item.purchasePrice)} ریال',
+                                style: pw.TextStyle(font: font)),
                           ),
                         ],
-                      ),
-                      ...manifest.items.asMap().entries.map((entry) {
-                        final index = entry.key + 1;
-                        final item = entry.value;
-                        return pw.TableRow(
-                          children: [
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(10),
-                              child: pw.Text('$index', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(10),
-                              child: pw.Text(item.name, style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(10),
-                              child: pw.Text('${item.quantity} ${item.unit}', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(10),
-                              child: pw.Text('${_formatPrice(item.purchasePrice)} ریال', style: pw.TextStyle(font: font)),
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                  pw.SizedBox(height: 30),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      '📌 تاریخ تهیه: ${_todayJalali()}',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey600,
-                        font: font,
-                      ),
+                      );
+                    }),
+                  ],
+                ),
+                pw.SizedBox(height: 30),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    '📌 تاریخ تهیه: ${_todayJalali()}',
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      color: PdfColors.grey,
+                      font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'توسعه‌دهنده: رضا قاسمی',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey500,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
       );
 
       final bytes = await pdf.save();
-      final tempFile = File('${Directory.systemTemp.path}/manifest_${manifest.number}.pdf');
+      final tempFile =
+          File('${Directory.systemTemp.path}/manifest_${manifest.number}.pdf');
       await tempFile.writeAsBytes(bytes);
 
       await Share.shareXFiles(
         [XFile(tempFile.path)],
         text: '📦 بارنامه شماره ${manifest.number}\nتاریخ: ${manifest.date}',
       );
-      
+
       _showSuccessMessage('✅ گزارش بارنامه ارسال شد');
     } catch (e) {
       _showSuccessMessage('❌ خطا در ارسال گزارش: $e');
     }
   }
 
-  // ==================== اشتراک‌گذاری گزارش فروش با PDF (اصلاح‌شده) ====================
+  // ==================== اشتراک‌گذاری گزارش فروش با PDF ====================
 
   Future<void> _shareSalesReport() async {
     if (_salesInvoices.isEmpty) {
@@ -1163,207 +1170,196 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
       _closeKeyboard();
       final font = await _loadFont();
       final pdf = pw.Document();
-      
+
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(30),
           build: (pw.Context context) {
-            final totalSales = _salesInvoices.fold<int>(0, (sum, inv) => sum + inv.totalPrice);
-            final totalCredit = _salesInvoices.where((inv) => inv.isCredit).fold<int>(0, (sum, inv) => sum + inv.totalPrice);
-            
-            return pw.Direction(
-              textDirection: pw.TextDirection.rtl,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Center(
-                    child: pw.Text(
-                      '🧾 گزارش فروش',
-                      style: pw.TextStyle(
-                        fontSize: 26,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.green700,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                  pw.SizedBox(height: 20),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(15),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(color: PdfColors.green200, width: 1.5),
-                      borderRadius: pw.BorderRadius.circular(8),
-                      color: PdfColors.green50,
-                    ),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Row(
-                          children: [
-                            pw.Text('📊 تعداد فاکتورها:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_salesInvoices.length}', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💰 مجموع فروش:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(totalSales)} ریال', 
-                              style: pw.TextStyle(
-                                color: PdfColors.green700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💳 مجموع نسیه:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(totalCredit)} ریال',
-                              style: pw.TextStyle(
-                                color: PdfColors.orange700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  pw.SizedBox(height: 25),
-                  pw.Text(
-                    '📋 لیست فاکتورها:',
+            final totalSales =
+                _salesInvoices.fold<int>(0, (sum, inv) => sum + inv.totalPrice);
+            final totalCredit = _salesInvoices
+                .where((inv) => inv.isCredit)
+                .fold<int>(0, (sum, inv) => sum + inv.totalPrice);
+
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    '🧾 گزارش فروش',
                     style: pw.TextStyle(
-                      fontSize: 18,
+                      fontSize: 28,
                       fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.green,
                       font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Table(
-                    border: pw.TableBorder.all(color: PdfColors.grey400),
-                    tableWidth: pw.TableWidth.max,
+                ),
+                pw.SizedBox(height: 20),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.TableRow(
-                        decoration: pw.BoxDecoration(
-                          color: PdfColors.green100,
-                        ),
+                      pw.Row(
                         children: [
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('ردیف', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('شماره', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('کالا', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('تعداد', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('قیمت', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('مشتری', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
+                          pw.Text('📊 تعداد فاکتورها:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_salesInvoices.length}',
+                              style: pw.TextStyle(font: font)),
                         ],
                       ),
-                      ..._salesInvoices.asMap().entries.map((entry) {
-                        final index = entry.key + 1;
-                        final inv = entry.value;
-                        return pw.TableRow(
-                          children: [
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('$index', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${inv.number}', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text(inv.productName, style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${inv.quantity}', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${_formatPrice(inv.totalPrice)} ریال', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text(inv.customerName.isEmpty ? 'نقدی' : inv.customerName, style: pw.TextStyle(font: font)),
-                            ),
-                          ],
-                        );
-                      }),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('💰 مجموع فروش:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_formatPrice(totalSales)} ریال',
+                              style: pw.TextStyle(
+                                  color: PdfColors.green,
+                                  fontWeight: pw.FontWeight.bold,
+                                  font: font)),
+                        ],
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('💳 مجموع نسیه:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_formatPrice(totalCredit)} ریال',
+                              style: pw.TextStyle(
+                                  color: PdfColors.orange,
+                                  fontWeight: pw.FontWeight.bold,
+                                  font: font)),
+                        ],
+                      ),
                     ],
                   ),
-                  pw.SizedBox(height: 30),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      '📌 تاریخ تهیه: ${_todayJalali()}',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey600,
-                        font: font,
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  '📋 لیست فاکتورها:',
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                    font: font,
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Table(
+                  border: pw.TableBorder.all(),
+                  tableWidth: pw.TableWidth.max,
+                  children: [
+                    pw.TableRow(
+                      decoration: pw.BoxDecoration(
+                        color: PdfColors.green100,
                       ),
+                      children: [
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('ردیف',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('شماره',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('کالا',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('تعداد',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('قیمت',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text('مشتری',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                        ),
+                      ],
+                    ),
+                    ..._salesInvoices.asMap().entries.map((entry) {
+                      final index = entry.key + 1;
+                      final inv = entry.value;
+                      return pw.TableRow(
+                        children: [
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text('$index',
+                                style: pw.TextStyle(font: font)),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text('${inv.number}',
+                                style: pw.TextStyle(font: font)),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text(inv.productName,
+                                style: pw.TextStyle(font: font)),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text('${inv.quantity}',
+                                style: pw.TextStyle(font: font)),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text(
+                                '${_formatPrice(inv.totalPrice)} ریال',
+                                style: pw.TextStyle(font: font)),
+                          ),
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(10),
+                            child: pw.Text(
+                                inv.customerName.isEmpty
+                                    ? 'نقدی'
+                                    : inv.customerName,
+                                style: pw.TextStyle(font: font)),
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
+                pw.SizedBox(height: 30),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    '📌 تاریخ تهیه: ${_todayJalali()}',
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      color: PdfColors.grey,
+                      font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'توسعه‌دهنده: رضا قاسمی',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey500,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
@@ -1377,7 +1373,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         [XFile(tempFile.path)],
         text: '📊 گزارش فروش\nتعداد فاکتورها: ${_salesInvoices.length}',
       );
-      
+
       _showSuccessMessage('✅ گزارش فروش ارسال شد');
     } catch (e) {
       _showSuccessMessage('❌ خطا در ارسال گزارش فروش: $e');
@@ -1419,7 +1415,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('📅 تاریخ:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('📅 تاریخ:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(invoice.date),
                       ],
@@ -1427,7 +1424,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('🏷️ کالا:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('🏷️ کالا:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(invoice.productName),
                       ],
@@ -1435,7 +1433,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('📊 تعداد:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('📊 تعداد:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text('${invoice.quantity}'),
                       ],
@@ -1443,7 +1442,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('💰 قیمت واحد:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('💰 قیمت واحد:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(_displayPrice(invoice.price)),
                       ],
@@ -1451,11 +1451,13 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('💵 مجموع:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('💵 مجموع:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Text(
                           _displayPrice(invoice.totalPrice),
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.green),
                         ),
                       ],
                     ),
@@ -1463,7 +1465,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Text('👤 مشتری:', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('👤 مشتری:',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(width: 8),
                           Text(invoice.customerName),
                         ],
@@ -1471,7 +1474,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Text('📱 موبایل:', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('📱 موبایل:',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(width: 8),
                           Text(invoice.customerPhone),
                         ],
@@ -1480,18 +1484,24 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Text('💳 نوع:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('💳 نوع:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: invoice.isCredit ? Colors.orange.shade100 : Colors.green.shade100,
+                            color: invoice.isCredit
+                                ? Colors.orange.shade100
+                                : Colors.green.shade100,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             invoice.isCredit ? 'نسیه' : 'نقدی',
                             style: TextStyle(
-                              color: invoice.isCredit ? Colors.orange.shade700 : Colors.green.shade700,
+                              color: invoice.isCredit
+                                  ? Colors.orange.shade700
+                                  : Colors.green.shade700,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -1530,170 +1540,145 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
       _closeKeyboard();
       final font = await _loadFont();
       final pdf = pw.Document();
-      
+
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(30),
           build: (pw.Context context) {
-            return pw.Direction(
-              textDirection: pw.TextDirection.rtl,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Center(
-                    child: pw.Text(
-                      '🧾 فاکتور فروش شماره ${invoice.number}',
-                      style: pw.TextStyle(
-                        fontSize: 26,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.green700,
-                        font: font,
-                      ),
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    '🧾 فاکتور فروش شماره ${invoice.number}',
+                    style: pw.TextStyle(
+                      fontSize: 28,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.green,
+                      font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 20),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(15),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(color: PdfColors.green200, width: 1.5),
-                      borderRadius: pw.BorderRadius.circular(8),
-                      color: PdfColors.green50,
-                    ),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Row(
-                          children: [
-                            pw.Text('📅 تاریخ:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text(invoice.date, 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('🏷️ کالا:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text(invoice.productName, 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('📊 تعداد:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${invoice.quantity}', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💰 قیمت واحد:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(invoice.price)} ریال', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💵 مجموع:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(invoice.totalPrice)} ریال',
+                ),
+                pw.SizedBox(height: 20),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        children: [
+                          pw.Text('📅 تاریخ:',
                               style: pw.TextStyle(
-                                color: PdfColors.green700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (invoice.isCredit) ...[
-                          pw.SizedBox(height: 6),
-                          pw.Row(
-                            children: [
-                              pw.Text('👤 مشتری:', 
-                                style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                              ),
-                              pw.SizedBox(width: 8),
-                              pw.Text(invoice.customerName, 
-                                style: pw.TextStyle(fontSize: 14, font: font)
-                              ),
-                            ],
-                          ),
-                          pw.SizedBox(height: 6),
-                          pw.Row(
-                            children: [
-                              pw.Text('📱 موبایل:', 
-                                style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                              ),
-                              pw.SizedBox(width: 8),
-                              pw.Text(invoice.customerPhone, 
-                                style: pw.TextStyle(fontSize: 14, font: font)
-                              ),
-                            ],
-                          ),
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text(invoice.date,
+                              style: pw.TextStyle(font: font)),
                         ],
-                        pw.SizedBox(height: 6),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('🏷️ کالا:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text(invoice.productName,
+                              style: pw.TextStyle(font: font)),
+                        ],
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('📊 تعداد:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${invoice.quantity}',
+                              style: pw.TextStyle(font: font)),
+                        ],
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('💰 قیمت واحد:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_formatPrice(invoice.price)} ریال',
+                              style: pw.TextStyle(font: font)),
+                        ],
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('💵 مجموع:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('${_formatPrice(invoice.totalPrice)} ریال',
+                              style: pw.TextStyle(
+                                  color: PdfColors.green,
+                                  fontWeight: pw.FontWeight.bold,
+                                  font: font)),
+                        ],
+                      ),
+                      if (invoice.isCredit) ...[
+                        pw.SizedBox(height: 4),
                         pw.Row(
                           children: [
-                            pw.Text('💳 نوع:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
+                            pw.Text('👤 مشتری:',
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold,
+                                    font: font)),
                             pw.SizedBox(width: 8),
-                            pw.Text(invoice.isCredit ? 'نسیه' : 'نقدی', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
+                            pw.Text(invoice.customerName,
+                                style: pw.TextStyle(font: font)),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Row(
+                          children: [
+                            pw.Text('📱 موبایل:',
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold,
+                                    font: font)),
+                            pw.SizedBox(width: 8),
+                            pw.Text(invoice.customerPhone,
+                                style: pw.TextStyle(font: font)),
                           ],
                         ),
                       ],
-                    ),
-                  ),
-                  pw.SizedBox(height: 30),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      '📌 تاریخ چاپ: ${_todayJalali()}',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey600,
-                        font: font,
+                      pw.SizedBox(height: 4),
+                      pw.Row(
+                        children: [
+                          pw.Text('💳 نوع:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text(invoice.isCredit ? 'نسیه' : 'نقدی',
+                              style: pw.TextStyle(font: font)),
+                        ],
                       ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 30),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    '📌 تاریخ چاپ: ${_todayJalali()}',
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      color: PdfColors.grey,
+                      font: font,
                     ),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'توسعه‌دهنده: رضا قاسمی',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey500,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
@@ -1703,7 +1688,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         bytes: await pdf.save(),
         filename: 'invoice_${invoice.number}.pdf',
       );
-      
+
       _showSuccessMessage('✅ فاکتور ارسال شد');
     } catch (e) {
       _showSuccessMessage('❌ خطا در چاپ فاکتور');
@@ -1744,9 +1729,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
       try {
         final List<dynamic> decoded = jsonDecode(dataStr);
         setState(() {
-          _salesInvoices = decoded
-              .map((item) => SalesInvoice.fromJson(item))
-              .toList();
+          _salesInvoices =
+              decoded.map((item) => SalesInvoice.fromJson(item)).toList();
         });
       } catch (e) {}
     }
@@ -1772,9 +1756,9 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
     if (productBarcode != null && productBarcode.isNotEmpty) {
       final product = _productDatabase.cast<ProductDatabaseItem?>().firstWhere(
-        (p) => p?.barcode == productBarcode,
-        orElse: () => null,
-      );
+            (p) => p?.barcode == productBarcode,
+            orElse: () => null,
+          );
       if (product != null) {
         selected.add({'product': product, 'quantity': 1});
       } else if (productName != null && productName.isNotEmpty) {
@@ -1806,16 +1790,20 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
             final query = searchCtrl.text.trim().toLowerCase();
             final products = _productDatabase.where((p) {
               if (query.isEmpty) return true;
-              return p.name.toLowerCase().contains(query) || p.barcode.contains(query);
+              return p.name.toLowerCase().contains(query) ||
+                  p.barcode.contains(query);
             }).toList();
 
             void addProduct(ProductDatabaseItem product) {
               final index = selected.indexWhere(
-                (e) => (e['product'] as ProductDatabaseItem).barcode == product.barcode,
+                (e) =>
+                    (e['product'] as ProductDatabaseItem).barcode ==
+                    product.barcode,
               );
               setSheetState(() {
                 if (index >= 0) {
-                  selected[index]['quantity'] = (selected[index]['quantity'] as int) + 1;
+                  selected[index]['quantity'] =
+                      (selected[index]['quantity'] as int) + 1;
                 } else {
                   selected.add({'product': product, 'quantity': 1});
                 }
@@ -1840,12 +1828,16 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                     child: Column(
                       children: [
-                        const Text('فاکتور فروش', style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
+                        const Text('فاکتور فروش',
+                            style: TextStyle(
+                                fontSize: 21, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
@@ -1853,21 +1845,31 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                               Row(children: [
                                 const Icon(Icons.person_outline),
                                 const SizedBox(width: 8),
-                                const Expanded(child: Text('مشخصات مشتری', style: TextStyle(fontWeight: FontWeight.bold))),
-                                Switch(value: isCredit, onChanged: (v) => setSheetState(() => isCredit = v)),
+                                const Expanded(
+                                    child: Text('مشخصات مشتری',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))),
+                                Switch(
+                                    value: isCredit,
+                                    onChanged: (v) =>
+                                        setSheetState(() => isCredit = v)),
                                 const Text('نسیه'),
                               ]),
                               if (isCredit) ...[
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: customerNameCtrl,
-                                  decoration: const InputDecoration(labelText: 'نام مشتری *', prefixIcon: Icon(Icons.person)),
+                                  decoration: const InputDecoration(
+                                      labelText: 'نام مشتری *',
+                                      prefixIcon: Icon(Icons.person)),
                                 ),
                                 const SizedBox(height: 8),
                                 TextField(
                                   controller: customerPhoneCtrl,
                                   keyboardType: TextInputType.phone,
-                                  decoration: const InputDecoration(labelText: 'شماره موبایل *', prefixIcon: Icon(Icons.phone)),
+                                  decoration: const InputDecoration(
+                                      labelText: 'شماره موبایل *',
+                                      prefixIcon: Icon(Icons.phone)),
                                 ),
                               ],
                             ],
@@ -1883,8 +1885,16 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                                 labelText: 'جستجوی کالا',
                                 hintText: 'نام کالا یا بارکد',
                                 prefixIcon: const Icon(Icons.search),
-                                suffixIcon: searchCtrl.text.isEmpty ? null : IconButton(icon: const Icon(Icons.clear), onPressed: () { searchCtrl.clear(); setSheetState(() {}); }),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                                suffixIcon: searchCtrl.text.isEmpty
+                                    ? null
+                                    : IconButton(
+                                        icon: const Icon(Icons.clear),
+                                        onPressed: () {
+                                          searchCtrl.clear();
+                                          setSheetState(() {});
+                                        }),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(14)),
                               ),
                             ),
                           ),
@@ -1896,19 +1906,26 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                               _closeKeyboard();
                               final result = await Navigator.push<String>(
                                 context,
-                                MaterialPageRoute(builder: (_) => const BarcodeScannerScreen()),
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const BarcodeScannerScreen()),
                               );
                               if (result == null || result.isEmpty) return;
-                              final product = _productDatabase.cast<ProductDatabaseItem?>().firstWhere(
-                                (p) => p?.barcode == result,
-                                orElse: () => null,
-                              );
+                              final product = _productDatabase
+                                  .cast<ProductDatabaseItem?>()
+                                  .firstWhere(
+                                    (p) => p?.barcode == result,
+                                    orElse: () => null,
+                                  );
                               if (product != null) {
                                 addProduct(product);
                                 searchCtrl.text = result;
                                 setSheetState(() {});
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('کالایی با این بارکد در بانک اطلاعاتی پیدا نشد')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'کالایی با این بارکد در بانک اطلاعاتی پیدا نشد')));
                               }
                             },
                           ),
@@ -1921,21 +1938,47 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                               if (selected.isNotEmpty) ...[
                                 const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text('اقلام فاکتور', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  child: Text('اقلام فاکتور',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16)),
                                 ),
                                 ...selected.map((line) {
-                                  final p = line['product'] as ProductDatabaseItem;
+                                  final p =
+                                      line['product'] as ProductDatabaseItem;
                                   final qty = line['quantity'] as int;
                                   return Card(
                                     child: ListTile(
-                                      leading: CircleAvatar(child: Text('$qty')),
-                                      title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                      subtitle: Text('قیمت فروش: ${_displayPrice(p.sellPrice)} | موجودی: ${p.stock}'),
-                                      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                                        IconButton(icon: const Icon(Icons.remove_circle_outline), onPressed: () => setSheetState(() { if (qty > 1) line['quantity'] = qty - 1; else selected.remove(line); })),
-                                        Text('$qty'),
-                                        IconButton(icon: const Icon(Icons.add_circle_outline, color: Colors.green), onPressed: () => setSheetState(() => line['quantity'] = qty + 1)),
-                                      ]),
+                                      leading:
+                                          CircleAvatar(child: Text('$qty')),
+                                      title: Text(p.name,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      subtitle: Text(
+                                          'قیمت فروش: ${_displayPrice(p.sellPrice)} | موجودی: ${p.stock}'),
+                                      trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                                icon: const Icon(Icons
+                                                    .remove_circle_outline),
+                                                onPressed: () =>
+                                                    setSheetState(() {
+                                                      if (qty > 1)
+                                                        line['quantity'] =
+                                                            qty - 1;
+                                                      else
+                                                        selected.remove(line);
+                                                    })),
+                                            Text('$qty'),
+                                            IconButton(
+                                                icon: const Icon(
+                                                    Icons.add_circle_outline,
+                                                    color: Colors.green),
+                                                onPressed: () => setSheetState(
+                                                    () => line['quantity'] =
+                                                        qty + 1)),
+                                          ]),
                                     ),
                                   );
                                 }),
@@ -1943,72 +1986,108 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                               ],
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Text('انتخاب کالا', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                child: Text('انتخاب کالا',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
                               ),
                               ...products.map((p) => Card(
-                                child: ListTile(
-                                  onTap: () => addProduct(p),
-                                  leading: const Icon(Icons.inventory_2_outlined),
-                                  title: Text(p.name),
-                                  subtitle: Text('موجودی: ${p.stock}  •  قیمت فروش: ${_displayPrice(p.sellPrice)}'),
-                                  trailing: const Icon(Icons.add_circle_outline, color: Colors.green),
-                                ),
-                              )),
+                                    child: ListTile(
+                                      onTap: () => addProduct(p),
+                                      leading: const Icon(
+                                          Icons.inventory_2_outlined),
+                                      title: Text(p.name),
+                                      subtitle: Text(
+                                          'موجودی: ${p.stock}  •  قیمت فروش: ${_displayPrice(p.sellPrice)}'),
+                                      trailing: const Icon(
+                                          Icons.add_circle_outline,
+                                          color: Colors.green),
+                                    ),
+                                  )),
                             ],
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
                           child: Row(children: [
-                            Expanded(child: Text('مجموع: ${_displayPrice(total)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17))),
+                            Expanded(
+                                child: Text('مجموع: ${_displayPrice(total)}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17))),
                             FilledButton.icon(
                               icon: const Icon(Icons.check),
                               label: const Text('ثبت فاکتور'),
-                              onPressed: selected.isEmpty ? null : () {
-                                _closeKeyboard();
-                                if (isCredit && (customerNameCtrl.text.trim().isEmpty || customerPhoneCtrl.text.trim().isEmpty)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('برای فروش نسیه، نام مشتری و شماره موبایل الزامی است')));
-                                  return;
-                                }
-                                final invoiceNumber = _getNextInvoiceNumber();
-                                final now = DateTime.now().millisecondsSinceEpoch.toString();
-                                for (final line in selected) {
-                                  final p = line['product'] as ProductDatabaseItem;
-                                  final qty = line['quantity'] as int;
-                                  final invoice = SalesInvoice(
-                                    id: '$now-${p.barcode}',
-                                    number: invoiceNumber,
-                                    productName: p.name,
-                                    barcode: p.barcode,
-                                    price: p.sellPrice,
-                                    quantity: qty,
-                                    totalPrice: p.sellPrice * qty,
-                                    customerName: customerNameCtrl.text.trim(),
-                                    customerPhone: customerPhoneCtrl.text.trim(),
-                                    isCredit: isCredit,
-                                    date: _getTodayDate(),
-                                    createdAt: now,
-                                  );
-                                  _salesInvoices.add(invoice);
-                                  final productIndex = _productDatabase.indexWhere((x) => x.barcode == p.barcode);
-                                  if (productIndex != -1) {
-                                    final newStock = _productDatabase[productIndex].stock - qty;
-                                    _productDatabase[productIndex] = ProductDatabaseItem(
-                                      barcode: p.barcode,
-                                      name: p.name,
-                                      stock: newStock < 0 ? 0 : newStock,
-                                      buyPrice: p.buyPrice,
-                                      sellPrice: p.sellPrice,
-                                    );
-                                  }
-                                }
-                                _saveSalesInvoices();
-                                _saveProductDatabase();
-                                _addSmartLog('💰 فاکتور شماره $invoiceNumber با ${selected.length} قلم ثبت شد');
-                                setState(() {});
-                                Navigator.pop(sheetContext);
-                                _showSuccessMessage('فاکتور شماره $invoiceNumber ثبت شد ✅');
-                              },
+                              onPressed: selected.isEmpty
+                                  ? null
+                                  : () {
+                                      _closeKeyboard();
+                                      if (isCredit &&
+                                          (customerNameCtrl.text
+                                                  .trim()
+                                                  .isEmpty ||
+                                              customerPhoneCtrl.text
+                                                  .trim()
+                                                  .isEmpty)) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    'برای فروش نسیه، نام مشتری و شماره موبایل الزامی است')));
+                                        return;
+                                      }
+                                      final invoiceNumber =
+                                          _getNextInvoiceNumber();
+                                      final now = DateTime.now()
+                                          .millisecondsSinceEpoch
+                                          .toString();
+                                      for (final line in selected) {
+                                        final p = line['product']
+                                            as ProductDatabaseItem;
+                                        final qty = line['quantity'] as int;
+                                        final invoice = SalesInvoice(
+                                          id: '$now-${p.barcode}',
+                                          number: invoiceNumber,
+                                          productName: p.name,
+                                          barcode: p.barcode,
+                                          price: p.sellPrice,
+                                          quantity: qty,
+                                          totalPrice: p.sellPrice * qty,
+                                          customerName:
+                                              customerNameCtrl.text.trim(),
+                                          customerPhone:
+                                              customerPhoneCtrl.text.trim(),
+                                          isCredit: isCredit,
+                                          date: _getTodayDate(),
+                                          createdAt: now,
+                                        );
+                                        _salesInvoices.add(invoice);
+                                        final productIndex =
+                                            _productDatabase.indexWhere(
+                                                (x) => x.barcode == p.barcode);
+                                        if (productIndex != -1) {
+                                          final newStock =
+                                              _productDatabase[productIndex]
+                                                      .stock -
+                                                  qty;
+                                          _productDatabase[productIndex] =
+                                              ProductDatabaseItem(
+                                            barcode: p.barcode,
+                                            name: p.name,
+                                            stock: newStock < 0 ? 0 : newStock,
+                                            buyPrice: p.buyPrice,
+                                            sellPrice: p.sellPrice,
+                                          );
+                                        }
+                                      }
+                                      _saveSalesInvoices();
+                                      _saveProductDatabase();
+                                      _addSmartLog(
+                                          '💰 فاکتور شماره $invoiceNumber با ${selected.length} قلم ثبت شد');
+                                      setState(() {});
+                                      Navigator.pop(sheetContext);
+                                      _showSuccessMessage(
+                                          'فاکتور شماره $invoiceNumber ثبت شد ✅');
+                                    },
                             ),
                           ]),
                         ),
@@ -2763,17 +2842,15 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         ),
                         items: const [
                           DropdownMenuItem(value: 'جلد', child: Text('جلد')),
-                          DropdownMenuItem(
-                              value: 'عدد', child: Text('عدد')),
-                          DropdownMenuItem(
-                              value: 'جین', child: Text('جین')),
-                          DropdownMenuItem(
-                              value: 'بسته', child: Text('بسته')),
+                          DropdownMenuItem(value: 'عدد', child: Text('عدد')),
+                          DropdownMenuItem(value: 'جین', child: Text('جین')),
+                          DropdownMenuItem(value: 'بسته', child: Text('بسته')),
                         ],
                         onChanged: (value) {
                           setState(() {
                             _selectedUnit = value!;
-                            _isPackageUnit = (value == 'بسته' || value == 'جین');
+                            _isPackageUnit =
+                                (value == 'بسته' || value == 'جین');
                             if (!_isPackageUnit) {
                               _packageSizeController.clear();
                             }
@@ -2792,9 +2869,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    hintText: (_selectedUnit == 'بسته' || _selectedUnit == 'جین')
-                        ? 'تعداد ${_selectedUnit}'
-                        : 'تعداد را وارد کنید',
+                    hintText:
+                        (_selectedUnit == 'بسته' || _selectedUnit == 'جین')
+                            ? 'تعداد ${_selectedUnit}'
+                            : 'تعداد را وارد کنید',
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -2858,9 +2936,11 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 final newItem = DeliveryItem(
                   name: _nameController.text,
                   quantity: int.parse(_quantityController.text),
-                  realQuantity: (_packageSizeController.text.isNotEmpty && _isPackageUnit)
-                      ? int.parse(_quantityController.text) * int.parse(_packageSizeController.text)
-                      : int.parse(_quantityController.text),
+                  realQuantity:
+                      (_packageSizeController.text.isNotEmpty && _isPackageUnit)
+                          ? int.parse(_quantityController.text) *
+                              int.parse(_packageSizeController.text)
+                          : int.parse(_quantityController.text),
                   purchasePrice: 0,
                   barcode: _barcodeController.text.trim(),
                   date: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -2905,8 +2985,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
   Widget _buildSearchResults() {
     final searchDbMatches = _productDatabase.where((p) {
       final term = _searchController.text.toLowerCase().trim();
-      return p.name.toLowerCase().contains(term) ||
-          p.barcode.contains(term);
+      return p.name.toLowerCase().contains(term) || p.barcode.contains(term);
     }).toList();
 
     final totalResults = _filteredItems.length +
@@ -3018,8 +3097,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
             ),
-            ..._filteredItems
-                .map((item) => _buildSearchResultItem(item, null)),
+            ..._filteredItems.map((item) => _buildSearchResultItem(item, null)),
           ],
           if (_manifestSearchResults.isNotEmpty) ...[
             const Padding(
@@ -3030,16 +3108,14 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               ),
             ),
             ..._manifestSearchResults.map((result) =>
-                _buildManifestSearchResult(
-                    result['manifest'], result['item'])),
+                _buildManifestSearchResult(result['manifest'], result['item'])),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildSearchResultItem(
-      DeliveryItem item, DeliveryManifest? manifest) {
+  Widget _buildSearchResultItem(DeliveryItem item, DeliveryManifest? manifest) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.all(12),
@@ -3150,23 +3226,15 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     );
   }
 
-  // ==================== صفحه اصلی با هدر جدید و آمار موجودی ====================
+  // ==================== صفحه اصلی با هدر جدید ====================
 
   Widget _buildMainView() {
     final now = DateTime.now();
     final greeting = _greetingByHour(now.hour);
     final dateText = _todayJalaliLong();
 
-    // محاسبه آمار موجودی
-    int totalItems = _productDatabase.length;
-    int totalStock = 0;
-    int totalValue = 0;
-    for (var item in _productDatabase) {
-      totalStock += item.stock;
-      totalValue += item.stock * item.sellPrice;
-    }
-
     return GestureDetector(
+      // ==================== با کلیک روی هر جای صفحه، کیبورد بسته شود ====================
       onTap: _closeKeyboard,
       child: RefreshIndicator(
         onRefresh: () async {
@@ -3178,7 +3246,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
           children: [
-            // ==================== هدر ====================
             Container(
               padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
               decoration: BoxDecoration(
@@ -3211,7 +3278,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         width: 2,
                       ),
                       image: const DecorationImage(
-                        image: AssetImage('assets/images/Logopit_1787568628075.png'),
+                        image: AssetImage(
+                            'assets/images/Logopit_1787568628075.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -3253,99 +3321,9 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               ),
             ),
 
-            const SizedBox(height: 12),
-
-            // ==================== کارت آمار موجودی ====================
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Colors.green.shade200,
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      const Text(
-                        '📦 تعداد کالاها',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _toPersianDigits(totalItems.toString()),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: Colors.green.shade200,
-                  ),
-                  Column(
-                    children: [
-                      const Text(
-                        '📊 موجودی کل',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _toPersianDigits(totalStock.toString()),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: Colors.green.shade200,
-                  ),
-                  Column(
-                    children: [
-                      const Text(
-                        '💰 ارزش موجودی',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _toPersianDigits(_formatPrice(totalValue)),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 16),
 
-            // ==================== جستجو ====================
+            // ==================== جستجو با FocusNode ====================
             Row(
               children: [
                 Expanded(
@@ -3381,6 +3359,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       _searchItems(value);
                     },
                     onSubmitted: (value) {
+                      // وقتی کاربر Enter زد، کیبورد بسته شود
                       _closeKeyboard();
                     },
                   ),
@@ -3392,7 +3371,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
+                    icon:
+                        const Icon(Icons.qr_code_scanner, color: Colors.white),
                     iconSize: 29,
                     padding: const EdgeInsets.all(13),
                     onPressed: () => _scanBarcode(forSearchOnly: true),
@@ -3407,8 +3387,6 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               _buildSearchResults(),
             ] else ...[
               const SizedBox(height: 20),
-
-              // ==================== گزارش هوشمند ====================
               Row(
                 children: [
                   const Icon(Icons.auto_awesome, size: 22),
@@ -3416,7 +3394,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   const Expanded(
                     child: Text(
                       'گزارش هوشمند',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   if (_smartLogs.isNotEmpty)
@@ -3468,16 +3447,12 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         }).toList(),
                       ),
               ),
-
               const SizedBox(height: 22),
-
-              // ==================== ابزارها ====================
               const Text(
                 'ابزارها',
                 style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
@@ -3523,16 +3498,15 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 22),
-
               if (_currentItems.isNotEmpty) ...[
                 Row(
                   children: [
                     const Expanded(
                       child: Text(
                         'محموله جاری',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     TextButton.icon(
@@ -3547,9 +3521,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                   (index) => _buildItemCard(index),
                 ),
               ],
-
               const SizedBox(height: 10),
-
               Center(
                 child: Text(
                   'توسعه‌دهنده: رضا قاسمی',
@@ -3612,9 +3584,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 10,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -3652,7 +3622,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
             Text('واحد: ${item.unit}', style: const TextStyle(fontSize: 13)),
             Text('تعداد: ${item.quantity} ${item.unit}'),
             if (item.packageSize > 0)
-              Text('تعداد داخل ${item.unit}: ${item.packageSize}  •  تعداد واقعی: ${item.realQuantity}'),
+              Text(
+                  'تعداد داخل ${item.unit}: ${item.packageSize}  •  تعداد واقعی: ${item.realQuantity}'),
           ],
         ),
         trailing: IconButton(
@@ -3710,7 +3681,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('اقلام بارنامه:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text('اقلام بارنامه:',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Text('${manifest.items.length} کالا'),
                 ],
               ),
@@ -3846,7 +3818,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       const CircleAvatar(
                         radius: 28,
                         backgroundColor: Colors.white24,
-                        child: Icon(Icons.person, color: Colors.white, size: 30),
+                        child:
+                            Icon(Icons.person, color: Colors.white, size: 30),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -3855,10 +3828,14 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                           children: [
                             Text(
                               _userName.isEmpty ? 'کاربر عزیز' : _userName,
-                              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
-                            const Text('تنظیمات برنامه', style: TextStyle(color: Colors.white70)),
+                            const Text('تنظیمات برنامه',
+                                style: TextStyle(color: Colors.white70)),
                           ],
                         ),
                       ),
@@ -3891,7 +3868,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 const Spacer(),
                 const Padding(
                   padding: EdgeInsets.all(18),
-                  child: Text('توسعه‌دهنده: رضا قاسمی', style: TextStyle(color: Colors.grey)),
+                  child: Text('توسعه‌دهنده: رضا قاسمی',
+                      style: TextStyle(color: Colors.grey)),
                 ),
               ],
             ),
@@ -3906,6 +3884,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     );
   }
 }
+
+// ==================== ادامه کد (ManifestScreen, SalesInvoicesScreen, SettingsScreen, ProductDatabaseScreen, BarcodeScannerScreen و مدل‌ها) در پاسخ بعدی ====================
 // ==================== صفحه اختصاصی بارنامه‌ها ====================
 
 class ManifestScreen extends StatefulWidget {
@@ -3958,7 +3938,7 @@ class _ManifestScreenState extends State<ManifestScreen> {
     final quantityCtrl = TextEditingController();
     final packageSizeCtrl = TextEditingController();
     final formKey = GlobalKey<FormState>();
-    
+
     String selectedUnit = 'عدد';
     bool isPackageUnit = false;
     List<Map<String, dynamic>> tempItems = [];
@@ -3993,7 +3973,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.local_shipping, color: Colors.blue),
+                              const Icon(Icons.local_shipping,
+                                  color: Colors.blue),
                               const SizedBox(width: 8),
                               const Text(
                                 'بارنامه جدید',
@@ -4020,7 +4001,6 @@ class _ManifestScreenState extends State<ManifestScreen> {
                             ],
                           ),
                           const SizedBox(height: 12),
-
                           Row(
                             children: [
                               Expanded(
@@ -4045,13 +4025,15 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: IconButton(
-                                  icon: const Icon(Icons.camera_alt, color: Colors.white),
+                                  icon: const Icon(Icons.camera_alt,
+                                      color: Colors.white),
                                   onPressed: () async {
                                     _closeKeyboard();
                                     final result = await Navigator.push<String>(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const BarcodeScannerScreen(),
+                                        builder: (_) =>
+                                            const BarcodeScannerScreen(),
                                       ),
                                     );
                                     if (result != null && result.isNotEmpty) {
@@ -4064,7 +4046,6 @@ class _ManifestScreenState extends State<ManifestScreen> {
                             ],
                           ),
                           const SizedBox(height: 12),
-
                           TextFormField(
                             controller: nameCtrl,
                             decoration: InputDecoration(
@@ -4083,7 +4064,6 @@ class _ManifestScreenState extends State<ManifestScreen> {
                             },
                           ),
                           const SizedBox(height: 12),
-
                           Row(
                             children: [
                               Expanded(
@@ -4097,15 +4077,20 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                     ),
                                   ),
                                   items: const [
-                                    DropdownMenuItem(value: 'عدد', child: Text('عدد')),
-                                    DropdownMenuItem(value: 'جلد', child: Text('جلد')),
-                                    DropdownMenuItem(value: 'جین', child: Text('جین')),
-                                    DropdownMenuItem(value: 'بسته', child: Text('بسته')),
+                                    DropdownMenuItem(
+                                        value: 'عدد', child: Text('عدد')),
+                                    DropdownMenuItem(
+                                        value: 'جلد', child: Text('جلد')),
+                                    DropdownMenuItem(
+                                        value: 'جین', child: Text('جین')),
+                                    DropdownMenuItem(
+                                        value: 'بسته', child: Text('بسته')),
                                   ],
                                   onChanged: (value) {
                                     setSheetState(() {
                                       selectedUnit = value!;
-                                      isPackageUnit = (value == 'بسته' || value == 'جین');
+                                      isPackageUnit =
+                                          (value == 'بسته' || value == 'جین');
                                       if (!isPackageUnit) {
                                         packageSizeCtrl.clear();
                                       }
@@ -4131,7 +4116,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'تعداد را وارد کنید';
                                     }
-                                    if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                                    if (int.tryParse(value) == null ||
+                                        int.parse(value) <= 0) {
                                       return 'تعداد معتبر وارد کنید';
                                     }
                                     return null;
@@ -4140,14 +4126,15 @@ class _ManifestScreenState extends State<ManifestScreen> {
                               ),
                             ],
                           ),
-
                           if (isPackageUnit) ...[
                             const SizedBox(height: 12),
                             TextFormField(
                               controller: packageSizeCtrl,
                               decoration: InputDecoration(
-                                labelText: 'تعداد داخل هر ${selectedUnit} (اختیاری)',
-                                hintText: 'مثلاً 10 - در صورت خالی بودن فقط تعداد ${selectedUnit} ثبت می‌شود',
+                                labelText:
+                                    'تعداد داخل هر ${selectedUnit} (اختیاری)',
+                                hintText:
+                                    'مثلاً 10 - در صورت خالی بودن فقط تعداد ${selectedUnit} ثبت می‌شود',
                                 prefixIcon: const Icon(Icons.inventory_2),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -4156,9 +4143,7 @@ class _ManifestScreenState extends State<ManifestScreen> {
                               keyboardType: TextInputType.number,
                             ),
                           ],
-
                           const SizedBox(height: 12),
-
                           SizedBox(
                             width: double.infinity,
                             child: OutlinedButton.icon(
@@ -4170,13 +4155,15 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                 final barcode = barcodeCtrl.text.trim();
                                 final name = nameCtrl.text.trim();
                                 final quantity = int.parse(quantityCtrl.text);
-                                final packageSize = packageSizeCtrl.text.isNotEmpty 
-                                    ? int.parse(packageSizeCtrl.text) 
-                                    : 0;
+                                final packageSize =
+                                    packageSizeCtrl.text.isNotEmpty
+                                        ? int.parse(packageSizeCtrl.text)
+                                        : 0;
 
-                                final realQuantity = isPackageUnit && packageSize > 0
-                                    ? quantity * packageSize
-                                    : quantity;
+                                final realQuantity =
+                                    isPackageUnit && packageSize > 0
+                                        ? quantity * packageSize
+                                        : quantity;
 
                                 final newItem = {
                                   'name': name,
@@ -4190,7 +4177,7 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                 setSheetState(() {
                                   tempItems.add(newItem);
                                 });
-                                
+
                                 barcodeCtrl.clear();
                                 nameCtrl.clear();
                                 quantityCtrl.clear();
@@ -4199,16 +4186,15 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                   selectedUnit = 'عدد';
                                   isPackageUnit = false;
                                 });
-                                
+
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('✅ کالا به لیست اضافه شد')),
+                                  const SnackBar(
+                                      content: Text('✅ کالا به لیست اضافه شد')),
                                 );
                               },
                             ),
                           ),
-
                           const SizedBox(height: 8),
-
                           if (tempItems.isNotEmpty) ...[
                             const Text(
                               '📦 کالاهای بارنامه:',
@@ -4221,24 +4207,30 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                 itemBuilder: (context, index) {
                                   final item = tempItems[index];
                                   return Card(
-                                    margin: const EdgeInsets.symmetric(vertical: 3),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 3),
                                     child: ListTile(
                                       dense: true,
                                       leading: CircleAvatar(
                                         radius: 12,
                                         backgroundColor: Colors.blue.shade100,
-                                        child: Text('${index + 1}', style: const TextStyle(fontSize: 10)),
+                                        child: Text('${index + 1}',
+                                            style:
+                                                const TextStyle(fontSize: 10)),
                                       ),
                                       title: Text(
                                         item['name'],
-                                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                        style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                       subtitle: Text(
                                         'تعداد: ${item['quantity']} ${item['unit']}',
                                         style: const TextStyle(fontSize: 11),
                                       ),
                                       trailing: IconButton(
-                                        icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
+                                        icon: const Icon(Icons.delete_outline,
+                                            color: Colors.red, size: 18),
                                         onPressed: () {
                                           setSheetState(() {
                                             tempItems.removeAt(index);
@@ -4260,57 +4252,68 @@ class _ManifestScreenState extends State<ManifestScreen> {
                               ),
                             ),
                           ],
-
                           const SizedBox(height: 8),
-
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton.icon(
                               style: FilledButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                               ),
                               icon: const Icon(Icons.check_circle),
                               label: const Text('ثبت بارنامه'),
-                              onPressed: tempItems.isEmpty ? null : () {
-                                _closeKeyboard();
-                                final manifestNumber = widget.manifests.length + 1;
-                                
-                                final items = tempItems.map((item) {
-                                  return DeliveryItem(
-                                    name: item['name'],
-                                    quantity: item['quantity'],
-                                    realQuantity: item['realQuantity'],
-                                    purchasePrice: 0,
-                                    barcode: item['barcode'],
-                                    date: DateTime.now().millisecondsSinceEpoch.toString(),
-                                    unit: item['unit'],
-                                    packageSize: item['packageSize'],
-                                  );
-                                }).toList();
+                              onPressed: tempItems.isEmpty
+                                  ? null
+                                  : () {
+                                      _closeKeyboard();
+                                      final manifestNumber =
+                                          widget.manifests.length + 1;
 
-                                final manifest = DeliveryManifest(
-                                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                                  number: manifestNumber,
-                                  date: _getTodayDate(),
-                                  items: items,
-                                  totalPrice: 0,
-                                  createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
-                                );
+                                      final items = tempItems.map((item) {
+                                        return DeliveryItem(
+                                          name: item['name'],
+                                          quantity: item['quantity'],
+                                          realQuantity: item['realQuantity'],
+                                          purchasePrice: 0,
+                                          barcode: item['barcode'],
+                                          date: DateTime.now()
+                                              .millisecondsSinceEpoch
+                                              .toString(),
+                                          unit: item['unit'],
+                                          packageSize: item['packageSize'],
+                                        );
+                                      }).toList();
 
-                                widget.onManifestSaved(manifest);
-                                
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('✅ بارنامه شماره $manifestNumber ثبت شد')),
-                                );
-                                
-                                Navigator.pop(sheetContext);
-                                setState(() {});
-                              },
+                                      final manifest = DeliveryManifest(
+                                        id: DateTime.now()
+                                            .millisecondsSinceEpoch
+                                            .toString(),
+                                        number: manifestNumber,
+                                        date: _getTodayDate(),
+                                        items: items,
+                                        totalPrice: 0,
+                                        createdAt: DateTime.now()
+                                            .millisecondsSinceEpoch
+                                            .toString(),
+                                      );
+
+                                      widget.onManifestSaved(manifest);
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                '✅ بارنامه شماره $manifestNumber ثبت شد')),
+                                      );
+
+                                      Navigator.pop(sheetContext);
+                                      setState(() {});
+                                    },
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -4336,7 +4339,7 @@ class _ManifestScreenState extends State<ManifestScreen> {
   @override
   Widget build(BuildContext context) {
     final manifests = _filteredManifests;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('📦 بارنامه‌ها'),
@@ -4349,7 +4352,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
             onPressed: () {
               if (widget.manifests.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('هیچ بارنامه‌ای برای گزارش وجود ندارد')),
+                  const SnackBar(
+                      content: Text('هیچ بارنامه‌ای برای گزارش وجود ندارد')),
                 );
                 return;
               }
@@ -4383,9 +4387,12 @@ class _ManifestScreenState extends State<ManifestScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.local_shipping_outlined, size: 72, color: Colors.grey),
+                          Icon(Icons.local_shipping_outlined,
+                              size: 72, color: Colors.grey),
                           SizedBox(height: 12),
-                          Text('هنوز بارنامه‌ای ثبت نشده', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                          Text('هنوز بارنامه‌ای ثبت نشده',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold)),
                           SizedBox(height: 6),
                           Text('برای شروع، «بارنامه جدید» را بزنید.'),
                         ],
@@ -4426,7 +4433,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'بارنامه شماره ${m.number}',
@@ -4446,10 +4454,12 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                         ),
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
                                         decoration: BoxDecoration(
                                           color: Colors.green.shade100,
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         child: Text(
                                           '$totalItems کالا',
@@ -4468,10 +4478,12 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                     runSpacing: 4,
                                     children: m.items.take(3).map((item) {
                                       return Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: Colors.grey.shade200,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           item.name,
@@ -4496,7 +4508,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.share_outlined, size: 20, color: Colors.blue),
+                                        icon: const Icon(Icons.share_outlined,
+                                            size: 20, color: Colors.blue),
                                         onPressed: () {
                                           _closeKeyboard();
                                           widget.onShareReport(m);
@@ -4504,7 +4517,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                         tooltip: 'اشتراک‌گذاری',
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.edit_outlined, size: 20, color: Colors.orange),
+                                        icon: const Icon(Icons.edit_outlined,
+                                            size: 20, color: Colors.orange),
                                         onPressed: () {
                                           _closeKeyboard();
                                           widget.onEdit(m);
@@ -4512,7 +4526,8 @@ class _ManifestScreenState extends State<ManifestScreen> {
                                         tooltip: 'ویرایش',
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                                        icon: const Icon(Icons.delete_outline,
+                                            size: 20, color: Colors.red),
                                         onPressed: () {
                                           _closeKeyboard();
                                           widget.onDelete(m);
@@ -4548,136 +4563,119 @@ class _ManifestScreenState extends State<ManifestScreen> {
       _closeKeyboard();
       final font = await _loadFont();
       final pdf = pw.Document();
-      
+
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(30),
           build: (pw.Context context) {
             final totalManifests = widget.manifests.length;
-            final totalItems = widget.manifests.fold<int>(0, (sum, m) => sum + m.items.length);
-            
-            return pw.Direction(
-              textDirection: pw.TextDirection.rtl,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Center(
-                    child: pw.Text(
-                      '📊 گزارش کل بارنامه‌ها',
-                      style: pw.TextStyle(
-                        fontSize: 26,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.blue900,
-                        font: font,
+            final totalItems =
+                widget.manifests.fold<int>(0, (sum, m) => sum + m.items.length);
+
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    '📊 گزارش کل بارنامه‌ها',
+                    style: pw.TextStyle(
+                      fontSize: 28,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.blue,
+                      font: font,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(12),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        children: [
+                          pw.Text('📋 تعداد بارنامه‌ها:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('$totalManifests',
+                              style: pw.TextStyle(font: font)),
+                        ],
                       ),
-                    ),
-                  ),
-                  pw.SizedBox(height: 20),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(15),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(color: PdfColors.blue200, width: 1.5),
-                      borderRadius: pw.BorderRadius.circular(8),
-                      color: PdfColors.blue50,
-                    ),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Row(
-                          children: [
-                            pw.Text('📋 تعداد بارنامه‌ها:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('$totalManifests', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('📦 تعداد کل کالاها:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('$totalItems', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  pw.SizedBox(height: 25),
-                  ...widget.manifests.map((m) {
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          '📌 بارنامه شماره ${m.number} - تاریخ: ${m.date}',
-                          style: pw.TextStyle(
-                            fontSize: 16,
-                            fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.blue700,
-                            font: font,
-                          ),
-                        ),
-                        pw.SizedBox(height: 5),
-                        ...m.items.map((item) {
-                          return pw.Padding(
-                            padding: const pw.EdgeInsets.only(right: 10),
-                            child: pw.Text('• ${item.name} (${item.quantity} ${item.unit})', 
-                              style: pw.TextStyle(font: font)
-                            ),
-                          );
-                        }),
-                        pw.SizedBox(height: 10),
-                        pw.Divider(),
-                      ],
-                    );
-                  }),
-                  pw.SizedBox(height: 30),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      '📌 تاریخ تهیه: ${_getTodayDate()}',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey600,
-                        font: font,
+                      pw.Row(
+                        children: [
+                          pw.Text('📦 تعداد کل کالاها:',
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold, font: font)),
+                          pw.SizedBox(width: 8),
+                          pw.Text('$totalItems',
+                              style: pw.TextStyle(font: font)),
+                        ],
                       ),
-                    ),
+                    ],
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'توسعه‌دهنده: رضا قاسمی',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey500,
-                        font: font,
+                ),
+                pw.SizedBox(height: 20),
+                ...widget.manifests.map((m) {
+                  return pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        '📌 بارنامه شماره ${m.number} - تاریخ: ${m.date}',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.blue,
+                          font: font,
+                        ),
                       ),
+                      pw.SizedBox(height: 5),
+                      ...m.items.map((item) {
+                        return pw.Padding(
+                          padding: const pw.EdgeInsets.only(right: 10),
+                          child: pw.Text(
+                              '• ${item.name} (${item.quantity} ${item.unit})',
+                              style: pw.TextStyle(font: font)),
+                        );
+                      }),
+                      pw.SizedBox(height: 10),
+                      pw.Divider(),
+                    ],
+                  );
+                }),
+                pw.SizedBox(height: 20),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(
+                    '📌 تاریخ تهیه: ${_getTodayDate()}',
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      color: PdfColors.grey,
+                      font: font,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
       );
 
       final bytes = await pdf.save();
-      final tempFile = File('${Directory.systemTemp.path}/all_manifests_report.pdf');
+      final tempFile =
+          File('${Directory.systemTemp.path}/all_manifests_report.pdf');
       await tempFile.writeAsBytes(bytes);
 
       await Share.shareXFiles(
         [XFile(tempFile.path)],
-        text: '📊 گزارش کل بارنامه‌ها\nتعداد بارنامه‌ها: ${widget.manifests.length}',
+        text:
+            '📊 گزارش کل بارنامه‌ها\nتعداد بارنامه‌ها: ${widget.manifests.length}',
       );
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('✅ گزارش بارنامه‌ها ارسال شد')),
       );
@@ -4689,6 +4687,7 @@ class _ManifestScreenState extends State<ManifestScreen> {
   }
 }
 
+// ==================== ادامه کد (SalesInvoicesScreen, SettingsScreen, ProductDatabaseScreen, BarcodeScannerScreen و مدل‌ها) در پاسخ بعدی ====================
 // ==================== صفحه فاکتورهای فروش ====================
 
 class SalesInvoicesScreen extends StatefulWidget {
@@ -4733,12 +4732,14 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
     }
     final query = _searchQuery.trim().toLowerCase();
     if (query.isNotEmpty) {
-      filtered = filtered.where((inv) =>
-          inv.productName.toLowerCase().contains(query) ||
-          inv.barcode.contains(query) ||
-          inv.customerName.toLowerCase().contains(query) ||
-          inv.customerPhone.contains(query) ||
-          inv.number.toString().contains(query)).toList();
+      filtered = filtered
+          .where((inv) =>
+              inv.productName.toLowerCase().contains(query) ||
+              inv.barcode.contains(query) ||
+              inv.customerName.toLowerCase().contains(query) ||
+              inv.customerPhone.contains(query) ||
+              inv.number.toString().contains(query))
+          .toList();
     }
     return filtered;
   }
@@ -4758,9 +4759,12 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text('حذف فاکتور شماره $number'),
-        content: const Text('آیا از حذف کل این فاکتور و تمام کالاهای آن مطمئن هستید؟'),
+        content: const Text(
+            'آیا از حذف کل این فاکتور و تمام کالاهای آن مطمئن هستید؟'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('انصراف')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('انصراف')),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(context, true),
@@ -4786,7 +4790,9 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
     final lines = _filteredLines();
     final groups = _groupInvoices(lines);
     final totalSales = lines.fold<int>(0, (sum, inv) => sum + inv.totalPrice);
-    final totalCredit = lines.where((inv) => inv.isCredit).fold<int>(0, (sum, inv) => sum + inv.totalPrice);
+    final totalCredit = lines
+        .where((inv) => inv.isCredit)
+        .fold<int>(0, (sum, inv) => sum + inv.totalPrice);
 
     return Scaffold(
       appBar: AppBar(
@@ -4820,9 +4826,11 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                         labelText: '🔍 جستجو در فاکتورها',
                         hintText: 'نام کالا، بارکد، مشتری یا شماره فاکتور',
                         prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14)),
                       ),
-                      onChanged: (value) => setState(() => _searchQuery = value),
+                      onChanged: (value) =>
+                          setState(() => _searchQuery = value),
                       onSubmitted: (_) => _closeKeyboard(),
                     ),
                   ),
@@ -4830,7 +4838,8 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                   FilterChip(
                     label: const Text('نسیه'),
                     selected: _showOnlyCredit,
-                    onSelected: (value) => setState(() => _showOnlyCredit = value),
+                    onSelected: (value) =>
+                        setState(() => _showOnlyCredit = value),
                   ),
                 ],
               ),
@@ -4847,7 +4856,8 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                 children: [
                   _summary('تعداد فاکتور', '${groups.length}'),
                   _summary('مجموع فروش', _displayPrice(totalSales)),
-                  _summary('مجموع نسیه', _displayPrice(totalCredit), danger: true),
+                  _summary('مجموع نسیه', _displayPrice(totalCredit),
+                      danger: true),
                 ],
               ),
             ),
@@ -4858,9 +4868,12 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.receipt_long, size: 70, color: Colors.grey),
+                          Icon(Icons.receipt_long,
+                              size: 70, color: Colors.grey),
                           SizedBox(height: 12),
-                          Text('هنوز فاکتوری ثبت نشده', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                          Text('هنوز فاکتوری ثبت نشده',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold)),
                           SizedBox(height: 6),
                           Text('برای شروع، «فاکتور جدید» را بزنید.'),
                         ],
@@ -4872,7 +4885,8 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                         final number = entry.key;
                         final group = entry.value;
                         final first = group.first;
-                        final groupTotal = group.fold<int>(0, (sum, x) => sum + x.totalPrice);
+                        final groupTotal =
+                            group.fold<int>(0, (sum, x) => sum + x.totalPrice);
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
                           elevation: 2,
@@ -4902,7 +4916,8 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '🧾 فاکتور شماره $number',
@@ -4922,58 +4937,87 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete_outline, color: Colors.red),
-                                        onPressed: () => _deleteInvoiceGroup(number, group),
+                                        icon: const Icon(Icons.delete_outline,
+                                            color: Colors.red),
+                                        onPressed: () =>
+                                            _deleteInvoiceGroup(number, group),
                                       ),
                                     ],
                                   ),
                                   const Divider(),
                                   Row(
                                     children: [
-                                      const Icon(Icons.person_outline, size: 19),
+                                      const Icon(Icons.person_outline,
+                                          size: 19),
                                       const SizedBox(width: 6),
                                       Expanded(
                                         child: Text(
-                                          first.customerName.isEmpty ? 'مشتری: نقدی / بدون نام' : 'مشتری: ${first.customerName}',
-                                          style: const TextStyle(fontWeight: FontWeight.w600),
+                                          first.customerName.isEmpty
+                                              ? 'مشتری: نقدی / بدون نام'
+                                              : 'مشتری: ${first.customerName}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600),
                                         ),
                                       ),
-                                      if (first.isCredit) 
+                                      if (first.isCredit)
                                         const Chip(
                                           label: Text('نسیه'),
-                                          avatar: Icon(Icons.schedule, size: 16),
+                                          avatar:
+                                              Icon(Icons.schedule, size: 16),
                                         ),
                                     ],
                                   ),
                                   if (first.customerPhone.isNotEmpty) ...[
                                     const SizedBox(height: 4),
-                                    Text('📱 موبایل: ${first.customerPhone}', style: const TextStyle(fontSize: 13)),
+                                    Text('📱 موبایل: ${first.customerPhone}',
+                                        style: const TextStyle(fontSize: 13)),
                                   ],
                                   const SizedBox(height: 8),
-                                  const Text('📋 اقلام فاکتور', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  const Text('📋 اقلام فاکتور',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 4),
                                   ...group.map((item) => Container(
-                                        margin: const EdgeInsets.symmetric(vertical: 3),
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 3),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 8),
                                         decoration: BoxDecoration(
-                                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surfaceContainerHighest,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Row(
                                           children: [
-                                            Expanded(child: Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w600))),
-                                            Text('${item.quantity} × ${_displayPrice(item.price)}'),
+                                            Expanded(
+                                                child: Text(item.productName,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600))),
+                                            Text(
+                                                '${item.quantity} × ${_displayPrice(item.price)}'),
                                             const SizedBox(width: 8),
-                                            Text(_displayPrice(item.totalPrice), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            Text(_displayPrice(item.totalPrice),
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                           ],
                                         ),
                                       )),
                                   const Divider(),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text('💰 مجموع فاکتور', style: TextStyle(fontWeight: FontWeight.bold)),
-                                      Text(_displayPrice(groupTotal), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                      const Text('💰 مجموع فاکتور',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(_displayPrice(groupTotal),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16)),
                                     ],
                                   ),
                                 ],
@@ -5007,238 +5051,282 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
       children: [
         Text(title, style: const TextStyle(fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 3),
-        Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: danger ? Colors.red : null)),
+        Text(value,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: danger ? Colors.red : null)),
       ],
     );
   }
 
   void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _shareSalesReport() async {
     try {
       _closeKeyboard();
+
       final font = await _loadFont();
       final pdf = pw.Document();
-      
+
+      final totalSales =
+          _invoices.fold<int>(0, (sum, inv) => sum + inv.totalPrice);
+      final totalCredit = _invoices
+          .where((inv) => inv.isCredit)
+          .fold<int>(0, (sum, inv) => sum + inv.totalPrice);
+
+      // متن فارسی در PDF باید صراحتاً RTL باشد.
+      pw.Widget pdfText(
+        String text, {
+        double fontSize = 11,
+        bool bold = false,
+        PdfColor? color,
+        pw.TextAlign align = pw.TextAlign.right,
+      }) {
+        return pw.Text(
+          text,
+          textDirection: pw.TextDirection.rtl,
+          textAlign: align,
+          style: pw.TextStyle(
+            font: font,
+            fontSize: fontSize,
+            fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
+            color: color,
+          ),
+        );
+      }
+
+      // برای اعداد و عبارت‌های ترکیبی فارسی/عدد، ترتیب نمایش را پایدار نگه می‌داریم.
+      String pdfNumber(int value) {
+        return _toPersianDigits(_formatPrice(value));
+      }
+
+      String pdfCount(int value) {
+        return _toPersianDigits(value.toString());
+      }
+
+      String pdfPrice(int value) {
+        return '${pdfNumber(value)} ریال';
+      }
+
+      pw.Widget cell(
+        String text, {
+        bool bold = false,
+        double fontSize = 9,
+        pw.TextAlign align = pw.TextAlign.center,
+      }) {
+        return pw.Container(
+          alignment: pw.Alignment.center,
+          padding: const pw.EdgeInsets.symmetric(
+            horizontal: 6,
+            vertical: 8,
+          ),
+          child: pdfText(
+            text,
+            fontSize: fontSize,
+            bold: bold,
+            align: align,
+          ),
+        );
+      }
+
       pdf.addPage(
-        pw.Page(
+        pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(30),
+          margin: const pw.EdgeInsets.fromLTRB(28, 30, 28, 30),
+          textDirection: pw.TextDirection.rtl,
+          maxPages: 100,
           build: (pw.Context context) {
-            final totalSales = _invoices.fold<int>(0, (sum, inv) => sum + inv.totalPrice);
-            final totalCredit = _invoices.where((inv) => inv.isCredit).fold<int>(0, (sum, inv) => sum + inv.totalPrice);
-            
-            return pw.Direction(
-              textDirection: pw.TextDirection.rtl,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Center(
-                    child: pw.Text(
-                      '🧾 گزارش فروش',
-                      style: pw.TextStyle(
-                        fontSize: 26,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.green700,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                  pw.SizedBox(height: 20),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(15),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(color: PdfColors.green200, width: 1.5),
-                      borderRadius: pw.BorderRadius.circular(8),
-                      color: PdfColors.green50,
-                    ),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+            return [
+              // =========================
+              // عنوان گزارش
+              // =========================
+              pw.Center(
+                child: pdfText(
+                  'گزارش فروش',
+                  fontSize: 26,
+                  bold: true,
+                  color: PdfColors.green,
+                  align: pw.TextAlign.center,
+                ),
+              ),
+
+              pw.SizedBox(height: 18),
+
+              // =========================
+              // خلاصه گزارش
+              // =========================
+              pw.Container(
+                width: double.infinity,
+                padding: const pw.EdgeInsets.all(14),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey300),
+                  borderRadius: pw.BorderRadius.circular(8),
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+                  children: [
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
                       children: [
-                        pw.Row(
-                          children: [
-                            pw.Text('📊 تعداد فاکتورها:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_invoices.length}', 
-                              style: pw.TextStyle(fontSize: 14, font: font)
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💰 مجموع فروش:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(totalSales)} ریال', 
-                              style: pw.TextStyle(
-                                color: PdfColors.green700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(height: 6),
-                        pw.Row(
-                          children: [
-                            pw.Text('💳 مجموع نسیه:', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14, font: font)
-                            ),
-                            pw.SizedBox(width: 8),
-                            pw.Text('${_formatPrice(totalCredit)} ریال',
-                              style: pw.TextStyle(
-                                color: PdfColors.orange700, 
-                                fontWeight: pw.FontWeight.bold, 
-                                fontSize: 14,
-                                font: font
-                              ),
-                            ),
-                          ],
+                        pdfText('تعداد فاکتورها:', bold: true),
+                        pw.SizedBox(width: 8),
+                        pdfText(pdfCount(_invoices.length)),
+                      ],
+                    ),
+                    pw.SizedBox(height: 8),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      children: [
+                        pdfText('مجموع فروش:', bold: true),
+                        pw.SizedBox(width: 8),
+                        pdfText(
+                          pdfPrice(totalSales),
+                          bold: true,
+                          color: PdfColors.green,
                         ),
                       ],
                     ),
-                  ),
-                  pw.SizedBox(height: 25),
-                  pw.Text(
-                    '📋 لیست فاکتورها:',
-                    style: pw.TextStyle(
-                      fontSize: 18,
-                      fontWeight: pw.FontWeight.bold,
-                      font: font,
-                    ),
-                  ),
-                  pw.SizedBox(height: 10),
-                  pw.Table(
-                    border: pw.TableBorder.all(color: PdfColors.grey400),
-                    tableWidth: pw.TableWidth.max,
-                    children: [
-                      pw.TableRow(
-                        decoration: pw.BoxDecoration(
-                          color: PdfColors.green100,
+                    pw.SizedBox(height: 8),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      children: [
+                        pdfText('مجموع نسیه:', bold: true),
+                        pw.SizedBox(width: 8),
+                        pdfText(
+                          pdfPrice(totalCredit),
+                          bold: true,
+                          color: PdfColors.orange,
                         ),
-                        children: [
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('ردیف', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('شماره', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('کالا', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('تعداد', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('قیمت', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(8),
-                            child: pw.Text('مشتری', 
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: font)
-                            ),
-                          ),
-                        ],
-                      ),
-                      ..._invoices.asMap().entries.map((entry) {
-                        final index = entry.key + 1;
-                        final inv = entry.value;
-                        return pw.TableRow(
-                          children: [
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('$index', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${inv.number}', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text(inv.productName, style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${inv.quantity}', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text('${_formatPrice(inv.totalPrice)} ریال', style: pw.TextStyle(font: font)),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.all(8),
-                              child: pw.Text(inv.customerName.isEmpty ? 'نقدی' : inv.customerName, style: pw.TextStyle(font: font)),
-                            ),
-                          ],
-                        );
-                      }),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              pw.SizedBox(height: 20),
+
+              // =========================
+              // عنوان جدول
+              // =========================
+              pdfText(
+                'لیست فاکتورها:',
+                fontSize: 18,
+                bold: true,
+              ),
+
+              pw.SizedBox(height: 10),
+
+              // =========================
+              // جدول فاکتورها
+              // =========================
+              // ترتیب children عمداً از راست به چپ است:
+              // مشتری | قیمت | تعداد | کالا | شماره | ردیف
+              pw.Table(
+                border: pw.TableBorder.all(
+                  color: PdfColors.black,
+                  width: 0.8,
+                ),
+                tableWidth: pw.TableWidth.max,
+                columnWidths: const {
+                  0: pw.FlexColumnWidth(1.55),
+                  1: pw.FlexColumnWidth(1.65),
+                  2: pw.FlexColumnWidth(0.8),
+                  3: pw.FlexColumnWidth(2.2),
+                  4: pw.FlexColumnWidth(0.8),
+                  5: pw.FlexColumnWidth(0.65),
+                },
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(
+                      color: PdfColors.green100,
+                    ),
+                    children: [
+                      cell('مشتری', bold: true),
+                      cell('قیمت', bold: true),
+                      cell('تعداد', bold: true),
+                      cell('کالا', bold: true),
+                      cell('شماره', bold: true),
+                      cell('ردیف', bold: true),
                     ],
                   ),
-                  pw.SizedBox(height: 30),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      '📌 تاریخ تهیه: ${_todayJalali()}',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey600,
-                        font: font,
-                      ),
-                    ),
-                  ),
-                  pw.SizedBox(height: 10),
-                  pw.Align(
-                    alignment: pw.Alignment.centerLeft,
-                    child: pw.Text(
-                      'توسعه‌دهنده: رضا قاسمی',
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        color: PdfColors.grey500,
-                        font: font,
-                      ),
-                    ),
-                  ),
+                  ..._invoices.asMap().entries.map((entry) {
+                    final index = entry.key + 1;
+                    final inv = entry.value;
+
+                    final customerName = inv.customerName.trim().isEmpty
+                        ? 'نقدی'
+                        : inv.customerName.trim();
+
+                    return pw.TableRow(
+                      children: [
+                        cell(
+                          customerName,
+                          fontSize: 8.5,
+                        ),
+                        cell(
+                          pdfPrice(inv.totalPrice),
+                          fontSize: 8.5,
+                        ),
+                        cell(
+                          pdfCount(inv.quantity),
+                          fontSize: 8.5,
+                        ),
+                        cell(
+                          inv.productName,
+                          fontSize: 8.5,
+                        ),
+                        cell(
+                          pdfCount(inv.number),
+                          fontSize: 8.5,
+                        ),
+                        cell(
+                          pdfCount(index),
+                          fontSize: 8.5,
+                        ),
+                      ],
+                    );
+                  }),
                 ],
               ),
-            );
+
+              pw.SizedBox(height: 24),
+
+              // =========================
+              // تاریخ تهیه گزارش
+              // =========================
+              pw.Align(
+                alignment: pw.Alignment.centerLeft,
+                child: pdfText(
+                  'تاریخ تهیه: ${_todayJalali()}',
+                  fontSize: 9,
+                  color: PdfColors.grey,
+                  align: pw.TextAlign.left,
+                ),
+              ),
+            ];
           },
         ),
       );
 
       final bytes = await pdf.save();
-      final tempFile = File('${Directory.systemTemp.path}/sales_report.pdf');
-      await tempFile.writeAsBytes(bytes);
+      final tempFile = File(
+        '${Directory.systemTemp.path}/sales_report.pdf',
+      );
+      await tempFile.writeAsBytes(bytes, flush: true);
 
       await Share.shareXFiles(
         [XFile(tempFile.path)],
-        text: '📊 گزارش فروش\nتعداد فاکتورها: ${_invoices.length}',
+        text:
+            'گزارش فروش\nتعداد فاکتورها: ${_toPersianDigits(_invoices.length.toString())}',
       );
-      
-      _showSuccessMessage('✅ گزارش فروش ارسال شد');
+
+      _showSuccessMessage('گزارش فروش ارسال شد');
     } catch (e) {
-      _showSuccessMessage('❌ خطا در ارسال گزارش فروش: $e');
+      _showSuccessMessage('خطا در ارسال گزارش فروش: $e');
     }
   }
 
@@ -5249,7 +5337,7 @@ class _SalesInvoicesScreenState extends State<SalesInvoicesScreen> {
   }
 }
 
-// ==================== صفحه تنظیمات با ارتباط با ما ====================
+// ==================== صفحه تنظیمات ====================
 
 class SettingsScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -5300,7 +5388,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'rezagasem.82@gmail.com',
-      query: 'subject=پیشنهاد برای اپلیکیشن حسابداری فروشگاه&body=سلام،%0A%0A',
+      query: 'subject=پیشنهاد برای اپلیکیشن تحویل بار&body=سلام،%0A%0A',
     );
     try {
       await launchUrl(emailUri);
@@ -5338,7 +5426,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // ==================== ظاهر ====================
             Card(
               margin: const EdgeInsets.only(bottom: 16),
               child: Padding(
@@ -5348,7 +5435,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     const Text(
                       '🌓 ظاهر',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const Divider(),
                     SwitchListTile(
@@ -5369,8 +5457,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-
-            // ==================== اطلاعات کاربر ====================
             Card(
               margin: const EdgeInsets.only(bottom: 16),
               child: Padding(
@@ -5380,7 +5466,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     const Text(
                       '👤 اطلاعات کاربر',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const Divider(),
                     TextFormField(
@@ -5395,8 +5482,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-
-            // ==================== ارتباط با ما ====================
             Card(
               margin: const EdgeInsets.only(bottom: 16),
               child: Padding(
@@ -5406,7 +5491,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     const Text(
                       '📧 ارتباط با ما',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const Divider(),
                     ListTile(
@@ -5418,101 +5504,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ListTile(
                       leading: const Icon(Icons.feedback, color: Colors.orange),
                       title: const Text('ارسال پیشنهاد'),
-                      subtitle: const Text('نظرات و پیشنهادات خود را با ما به اشتراک بگذارید'),
+                      subtitle: const Text(
+                          'نظرات و پیشنهادات خود را با ما به اشتراک بگذارید'),
                       onTap: _sendEmail,
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.phone, color: Colors.green),
-                      title: const Text('تماس با ما'),
-                      subtitle: const Text('09123456789'),
-                      onTap: () {
-                        // می‌توانید شماره تلفن را اضافه کنید
-                        _showSnackbar('☎️ شماره تماس: 09123456789');
-                      },
                     ),
                   ],
                 ),
               ),
             ),
-
-            // ==================== درباره برنامه ====================
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.green.shade100,
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/Logopit_1787568628075.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
+                    const Icon(Icons.apps, size: 48, color: Colors.green),
+                    const SizedBox(height: 8),
                     const Text(
-                      'اپلیکیشن حسابداری فروشگاه',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'اپلیکیشن تحویل بار و فروش',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'نسخه 2.2.0',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
-                      ),
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.grey.shade600),
                     ),
                     const SizedBox(height: 4),
-                    const Divider(),
-                    const SizedBox(height: 8),
-                    const Text(
-                      '👨‍💻 توسعه‌دهنده:',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text(
-                      'رضا قاسمی',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue,
-                      ),
+                    Text(
+                      'توسعه‌دهنده: رضا قاسمی',
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.grey.shade600),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       '📧 rezagasem.82@gmail.com',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.info_outline, size: 16, color: Colors.green),
-                          SizedBox(width: 8),
-                          Text(
-                            'برای ارتباط با توسعه‌دهنده از بخش "ارسال ایمیل" استفاده کنید.',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.blue.shade700),
                     ),
                   ],
                 ),
@@ -5524,7 +5553,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
-// ==================== صفحه بانک اطلاعاتی کالاها ====================
+
+// ==================== صفحه بانک اطلاعاتی کالاها با قابلیت حذف ====================
 
 class ProductDatabaseScreen extends StatefulWidget {
   final List<ProductDatabaseItem> database;
@@ -5548,9 +5578,6 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
   String _selectedFolder = 'همه';
   String _newItemFolder = 'عمومی';
   List<String> _customFolders = [];
-  
-  bool _isSelectionMode = false;
-  List<ProductDatabaseItem> _selectedItems = [];
 
   @override
   void initState() {
@@ -5570,109 +5597,6 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
     FocusScope.of(context).unfocus();
   }
 
-  void _toggleSelectionMode() {
-    setState(() {
-      _isSelectionMode = !_isSelectionMode;
-      if (!_isSelectionMode) {
-        _selectedItems.clear();
-      }
-    });
-  }
-
-  void _selectItem(ProductDatabaseItem item) {
-    setState(() {
-      if (_selectedItems.contains(item)) {
-        _selectedItems.remove(item);
-      } else {
-        _selectedItems.add(item);
-      }
-    });
-  }
-
-  void _deleteSelectedItems() {
-    if (_selectedItems.isEmpty) return;
-    
-    _closeKeyboard();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('🗑️ حذف گروهی کالاها'),
-        content: Text('آیا از حذف ${_selectedItems.length} کالای انتخاب‌شده مطمئن هستید؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('انصراف'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              final count = _selectedItems.length;
-              for (final item in _selectedItems) {
-                setState(() {
-                  _items.removeWhere((p) => p.barcode == item.barcode);
-                });
-                widget.onItemDeleted(item.barcode);
-              }
-              _selectedItems.clear();
-              _isSelectionMode = false;
-              _notifyUpdate();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('✅ $count کالا حذف شد')),
-              );
-            },
-            child: Text('حذف ${_selectedItems.length} کالا'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _deleteAllItems() {
-    if (_items.isEmpty) return;
-    
-    _closeKeyboard();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('🗑️ حذف همه کالاها'),
-        content: Text('آیا از حذف همه ${_items.length} کالا از بانک اطلاعاتی مطمئن هستید؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('انصراف'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              final count = _items.length;
-              for (final item in _items) {
-                widget.onItemDeleted(item.barcode);
-              }
-              setState(() {
-                _items.clear();
-              });
-              _notifyUpdate();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('✅ $count کالا حذف شد')),
-              );
-            },
-            child: const Text('حذف همه کالاها'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _loadFolders() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getStringList('product_folders') ?? [];
@@ -5690,11 +5614,12 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
     for (final item in _items) {
       if (item.folder.trim().isNotEmpty) values.add(item.folder.trim());
     }
-    return values.toList()..sort((a, b) {
-      if (a == 'عمومی') return -1;
-      if (b == 'عمومی') return 1;
-      return a.compareTo(b);
-    });
+    return values.toList()
+      ..sort((a, b) {
+        if (a == 'عمومی') return -1;
+        if (b == 'عمومی') return 1;
+        return a.compareTo(b);
+      });
   }
 
   List<ProductDatabaseItem> get _visibleItems {
@@ -5900,7 +5825,8 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
       setState(() => _isLoading = false);
       _notifyUpdate();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$addedCount کالا با موفقیت از اکسل اضافه شد ✅')),
+        SnackBar(
+            content: Text('$addedCount کالا با موفقیت از اکسل اضافه شد ✅')),
       );
     } catch (e) {
       setState(() => _isLoading = false);
@@ -5944,7 +5870,8 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text('➕ افزودن کالا به بانک'),
           content: Form(
             key: formKey,
@@ -5967,8 +5894,9 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
                       labelText: 'نام کالا',
                       prefixIcon: Icon(Icons.inventory_2_outlined),
                     ),
-                    validator: (v) =>
-                        v == null || v.trim().isEmpty ? 'نام کالا الزامی است' : null,
+                    validator: (v) => v == null || v.trim().isEmpty
+                        ? 'نام کالا الزامی است'
+                        : null,
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
@@ -5987,19 +5915,22 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: stockCtrl,
-                    decoration: const InputDecoration(labelText: 'تعداد موجودی'),
+                    decoration:
+                        const InputDecoration(labelText: 'تعداد موجودی'),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: buyCtrl,
-                    decoration: const InputDecoration(labelText: 'قیمت خرید (ریال)'),
+                    decoration:
+                        const InputDecoration(labelText: 'قیمت خرید (ریال)'),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: sellCtrl,
-                    decoration: const InputDecoration(labelText: 'قیمت فروش (ریال)'),
+                    decoration:
+                        const InputDecoration(labelText: 'قیمت فروش (ریال)'),
                     keyboardType: TextInputType.number,
                   ),
                 ],
@@ -6054,181 +5985,154 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _isSelectionMode 
-            ? '${_selectedItems.length} انتخاب شده' 
-            : '🗄️ بانک اطلاعاتی کالاها',
-        ),
+        title: const Text('🗄️ بانک اطلاعاتی کالاها'),
         backgroundColor: Colors.green.shade700,
         foregroundColor: Colors.white,
         actions: [
-          if (_isSelectionMode) ...[
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: _selectedItems.isEmpty ? null : _deleteSelectedItems,
-              tooltip: 'حذف انتخاب‌شده‌ها',
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _toggleSelectionMode,
-              tooltip: 'لغو انتخاب',
-            ),
-          ] else ...[
-            IconButton(
-              icon: const Icon(Icons.delete_sweep_outlined),
-              onPressed: _items.isEmpty ? null : _deleteAllItems,
-              tooltip: 'حذف همه کالاها',
-            ),
-            IconButton(
-              icon: const Icon(Icons.checklist_outlined),
-              onPressed: _items.isEmpty ? null : _toggleSelectionMode,
-              tooltip: 'انتخاب چندگانه',
-            ),
-            IconButton(
-              icon: const Icon(Icons.create_new_folder_outlined),
-              tooltip: 'پوشه جدید',
-              onPressed: _showNewFolderDialog,
-            ),
-            IconButton(
-              icon: const Icon(Icons.help_outline, color: Colors.white),
-              tooltip: 'راهنمای ستون‌ها',
-              onPressed: _showGuideDialog,
-            ),
-            IconButton(
-              icon: const Icon(Icons.add),
-              tooltip: 'افزودن دستی',
-              onPressed: _showAddManualDialog,
-            ),
-          ],
+          IconButton(
+            icon: const Icon(Icons.create_new_folder_outlined),
+            tooltip: 'پوشه جدید',
+            onPressed: _showNewFolderDialog,
+          ),
+          IconButton(
+            icon: const Icon(Icons.help_outline, color: Colors.white),
+            tooltip: 'راهنمای ستون‌ها',
+            onPressed: _showGuideDialog,
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'افزودن دستی',
+            onPressed: _showAddManualDialog,
+          ),
         ],
       ),
       body: GestureDetector(
         onTap: _closeKeyboard,
         child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withOpacity(.65),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size.fromHeight(52),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              icon: const Icon(Icons.table_chart_outlined),
-                              label: const Text('ورود اکسل'),
-                              onPressed: _importExcel,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.red.shade50,
-                                foregroundColor: Colors.red.shade700,
-                                side: BorderSide(color: Colors.red.shade200),
-                                minimumSize: const Size.fromHeight(52),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              icon: const Icon(Icons.picture_as_pdf),
-                              label: const Text('ورود PDF'),
-                              onPressed: _importPdf,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'پوشه‌ها',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 7),
-                      SizedBox(
-                        height: 42,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainerHighest
+                        .withOpacity(.65),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            _folderChip('همه'),
-                            ..._folders.map(_folderChip),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size.fromHeight(52),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.table_chart_outlined),
+                                label: const Text('ورود اکسل'),
+                                onPressed: _importExcel,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.red.shade50,
+                                  foregroundColor: Colors.red.shade700,
+                                  side: BorderSide(color: Colors.red.shade200),
+                                  minimumSize: const Size.fromHeight(52),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.picture_as_pdf),
+                                label: const Text('ورود PDF'),
+                                onPressed: _importPdf,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: visible.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'پوشه‌ها',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 7),
+                        SizedBox(
+                          height: 42,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
                             children: [
-                              Icon(Icons.folder_open_outlined,
-                                  size: 64, color: Colors.grey.shade400),
-                              const SizedBox(height: 12),
-                              Text(
-                                _selectedFolder == 'همه'
-                                    ? 'بانک اطلاعاتی خالی است'
-                                    : 'این پوشه خالی است',
-                              ),
-                              const SizedBox(height: 8),
-                              ElevatedButton.icon(
-                                onPressed: _showAddManualDialog,
-                                icon: const Icon(Icons.add),
-                                label: const Text('افزودن کالا'),
-                              ),
+                              _folderChip('همه'),
+                              ..._folders.map(_folderChip),
                             ],
                           ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(12),
-                          itemCount: visible.length,
-                          itemBuilder: (context, index) {
-                            final item = visible[index];
-                            final isSelected = _selectedItems.contains(item);
-                            
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: _isSelectionMode
-                                  ? CheckboxListTile(
-                                      value: isSelected,
-                                      onChanged: (_) => _selectItem(item),
-                                      title: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        'پوشه: ${item.folder}\n'
-                                        'بارکد: ${item.barcode.isEmpty ? "ندارد" : item.barcode}\n'
-                                        'موجودی: ${item.stock} | خرید: ${_formatPrice(item.buyPrice)} ریال',
-                                        style: const TextStyle(fontSize: 11),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      secondary: Text(
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: visible.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.folder_open_outlined,
+                                    size: 64, color: Colors.grey.shade400),
+                                const SizedBox(height: 12),
+                                Text(
+                                  _selectedFolder == 'همه'
+                                      ? 'بانک اطلاعاتی خالی است'
+                                      : 'این پوشه خالی است',
+                                ),
+                                const SizedBox(height: 8),
+                                ElevatedButton.icon(
+                                  onPressed: _showAddManualDialog,
+                                  icon: const Icon(Icons.add),
+                                  label: const Text('افزودن کالا'),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(12),
+                            itemCount: visible.length,
+                            itemBuilder: (context, index) {
+                              final item = visible[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.deepPurple.shade50,
+                                    child:
+                                        const Icon(Icons.inventory_2_outlined),
+                                  ),
+                                  title: Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    'پوشه: ${item.folder}\n'
+                                    'بارکد: ${item.barcode.isEmpty ? "ندارد" : item.barcode}\n'
+                                    'موجودی: ${item.stock} | خرید: ${_formatPrice(item.buyPrice)} ریال',
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  trailing: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
                                         '${_formatPrice(item.sellPrice)} ریال',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -6236,69 +6140,23 @@ class _ProductDatabaseScreenState extends State<ProductDatabaseScreen> {
                                           fontSize: 12,
                                         ),
                                       ),
-                                    )
-                                  : ListTile(
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 4,
+                                      const SizedBox(height: 4),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete_outline,
+                                            color: Colors.red, size: 20),
+                                        onPressed: () =>
+                                            _showDeleteDialog(item),
+                                        tooltip: 'حذف کالا',
                                       ),
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.deepPurple.shade50,
-                                        child: const Icon(Icons.inventory_2_outlined),
-                                      ),
-                                      title: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      subtitle: Text(
-                                        'پوشه: ${item.folder}\n'
-                                        'بارکد: ${item.barcode.isEmpty ? "ندارد" : item.barcode}\n'
-                                        'موجودی: ${item.stock} | خرید: ${_formatPrice(item.buyPrice)} ریال',
-                                        style: const TextStyle(fontSize: 11),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      trailing: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            '${_formatPrice(item.sellPrice)} ریال',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.green,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete_outline, 
-                                              color: Colors.red, 
-                                              size: 20,
-                                            ),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(
-                                              minWidth: 30,
-                                              minHeight: 30,
-                                            ),
-                                            onPressed: () => _showDeleteDialog(item),
-                                            tooltip: 'حذف کالا',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            );
-                          },
-                        ),
-                ),
-              ],
-            ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
       ),
     );
   }
