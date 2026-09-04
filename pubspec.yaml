@@ -17,7 +17,7 @@ dependencies:
   mobile_scanner: ^4.0.0
   
   # File Picker for Excel/PDF
-  file_picker: ^10.3.11
+  file_picker: ^8.3.7
   
   # Excel import/export
   excel: ^2.0.0
